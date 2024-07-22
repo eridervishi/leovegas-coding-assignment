@@ -1,13 +1,19 @@
 import Movie from './Movie'
 import '../styles/movies.scss'
-import { useGetMoviesQuery } from '../services/movies'
 import { useSearchParams } from 'react-router-dom'
+import { useInfiniteMovies } from '../hooks/useInfiniteMovies'
+
 
 const Movies = ({ viewTrailer, closeCard }) => {
     const [searchParams] = useSearchParams()
-    const { data: movies, isLoading, isError, error } = useGetMoviesQuery(searchParams.get('search'))
+    const searchTerm = searchParams.get('search') || ''
 
-    if (isLoading) {
+    const { movies, isLoading, isError, error, hasMore, isFetchingNextPage } = useInfiniteMovies(searchTerm, {
+        distance: '200px',
+        debounceMs: 200
+    });
+
+    if (isLoading && movies.length === 0) {
         return <div>Loading...</div>;
     }
 
@@ -17,16 +23,16 @@ const Movies = ({ viewTrailer, closeCard }) => {
 
     return (
         <div data-testid="movies" className="custom-grid">
-            {movies.results?.map((movie) => {
-                return (
-                    <Movie
-                        movie={movie}
-                        key={movie.id}
-                        viewTrailer={viewTrailer}
-                        closeCard={closeCard}
-                    />
-                )
-            })}
+            {movies?.map((movie) => (
+                <Movie
+                    movie={movie}
+                    key={movie.id}
+                    viewTrailer={viewTrailer}
+                    closeCard={closeCard}
+                />
+            ))}
+            {isFetchingNextPage && <div>Loading more...</div>}
+            {!hasMore && <div>No more movies to load</div>}
         </div>
     )
 }

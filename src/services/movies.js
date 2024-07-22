@@ -13,9 +13,26 @@ export const moviesApi = createApi({
     }),
     endpoints: (builder) => ({
         getMovies: builder.query({
-            query: (searchTerm = '') => {
+            query: ({ searchTerm = '', page = 1 }) => {
                 const endpoint = searchTerm ? ENDPOINTS.SEARCH : ENDPOINTS.DISCOVER;
-                return `${endpoint}?api_key=${API.KEY}&query=${searchTerm}&${PARAMS.SORT_BY_VOTE_COUNT}`;
+                return `${endpoint}?api_key=${API.KEY}&query=${searchTerm}&${PARAMS.SORT_BY_VOTE_COUNT}&page=${page}`;
+            },
+            serializeQueryArgs: ({ endpointName, queryArgs }) => {
+                // Include searchTerm in the cache key
+                return { endpointName, searchTerm: queryArgs.searchTerm };
+            },
+            merge: (currentCache, newItems) => {
+                if (currentCache) {
+                    return {
+                        ...newItems,
+                        results: [...currentCache.results, ...newItems.results],
+                    };
+                }
+                return newItems;
+            },
+            forceRefetch({ currentArg, previousArg }) {
+                // Refetch if searchTerm or page changes
+                return currentArg.searchTerm !== previousArg?.searchTerm || currentArg.page !== previousArg?.page;
             },
             transformErrorResponse: (response, meta, arg) => {
                 return { status: response.data.status_code, data: { message: response.data.status_message } };
