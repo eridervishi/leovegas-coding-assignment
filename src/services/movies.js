@@ -22,7 +22,7 @@ export const moviesApi = createApi({
                 return { endpointName, searchTerm: queryArgs.searchTerm };
             },
             merge: (currentCache, newItems) => {
-                if (currentCache) {
+                if (currentCache && newItems.page > 1) {
                     return {
                         ...newItems,
                         results: [...currentCache.results, ...newItems.results],
@@ -31,7 +31,6 @@ export const moviesApi = createApi({
                 return newItems;
             },
             forceRefetch({ currentArg, previousArg }) {
-                // Refetch if searchTerm or page changes
                 return currentArg.searchTerm !== previousArg?.searchTerm || currentArg.page !== previousArg?.page;
             },
             transformErrorResponse: (response, meta, arg) => {

@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "react-scripts test --coverage --maxWorkers=6",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/react-hooks": "^8.0.1",
+    "react-test-renderer": "^18.3.1"
   }
 }
