@@ -5,50 +5,50 @@ import Movie from './Movie'
 import '../styles/starred.scss'
 
 const Starred = ({ viewTrailer }) => {
-    const dispatch = useDispatch()
-    const starredMovies = useSelector(state => state.starred.starredMovies)
+  const dispatch = useDispatch()
+  const starredMovies = useSelector(state => state.starred.starredMovies)
 
-    const handleClearAllStarred = () => {
-        dispatch(clearAllStarred())
-    }
+  const handleClearAllStarred = () => {
+    dispatch(clearAllStarred())
+  }
 
-    if (starredMovies.length === 0) {
-        return (
-            <div className="starred" data-testid="starred">
-                <div className="text-center empty-cart">
-                    <i className="bi bi-star" />
-                    <p>There are no starred movies.</p>
-                    <p>Go to <Link to='/'>Home</Link></p>
-                </div>
-            </div>
-        )
-    }
-
+  if (starredMovies.length === 0) {
     return (
-        <div className="starred" data-testid="starred">
-            <div data-testid="starred-movies" className="starred-movies">
-                <h6 className="header">Starred movies</h6>
-                <div className="row">
-                    {starredMovies.map((movie) => (
-                        <Movie 
-                            movie={movie} 
-                            key={movie.id}
-                            viewTrailer={viewTrailer}
-                        />
-                    ))}
-                </div>
-
-                <footer className="text-center">
-                    <button 
-                        className="btn btn-primary" 
-                        onClick={handleClearAllStarred}
-                    >
-                        Remove all starred
-                    </button>
-                </footer>
-            </div>
+      <div className="starred" data-testid="starred">
+        <div className="text-center empty-cart">
+          <i className="bi bi-star" />
+          <p>There are no starred movies.</p>
+          <p>Go to <Link to='/'>Home</Link></p>
         </div>
+      </div>
     )
+  }
+
+  return (
+    <div className="starred" data-testid="starred">
+      <div data-testid="starred-movies" className="starred-movies">
+        <h6 className="header">Starred movies</h6>
+        <div className="custom-grid">
+          {starredMovies.map((movie) => (
+            <Movie
+              movie={movie}
+              key={movie.id}
+              viewTrailer={viewTrailer}
+            />
+          ))}
+        </div>
+
+        <footer className="text-center">
+          <button
+            className="btn btn-primary"
+            onClick={handleClearAllStarred}
+          >
+            Remove all starred
+          </button>
+        </footer>
+      </div>
+    </div>
+  )
 }
 
 export default Starred

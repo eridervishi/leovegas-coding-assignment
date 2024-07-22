@@ -16,7 +16,7 @@ const Movies = ({ viewTrailer, closeCard }) => {
     }
 
     return (
-        <div data-testid="movies">
+        <div data-testid="movies" className="custom-grid">
             {movies.results?.map((movie) => {
                 return (
                     <Movie
