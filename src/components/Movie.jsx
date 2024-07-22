@@ -53,7 +53,7 @@ const Movie = ({ movie, viewTrailer }) => {
                         >
                             {isWatchLater ? <i className="bi bi-check"></i> : 'Watch Later'}
                         </button>
-                        <button type="button" className="btn btn-dark" onClick={() => viewTrailer(movie)}>View Trailer</button>
+                        <button type="button" className="btn btn-dark" onClick={() => viewTrailer(movie.id)}>View Trailer</button>
                     </div>
                     <img className="center-block" src={(movie.poster_path) ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : placeholder} alt="Movie poster" />
                 </div>
