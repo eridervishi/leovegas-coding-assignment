@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react'
 import { Link, NavLink } from "react-router-dom"
 import { useSelector } from 'react-redux'
 import { useSearchParams, createSearchParams } from 'react-router-dom'
+import { useDebounce } from '../hooks/useDebounce'
 
 import '../styles/header.scss'
 
@@ -9,9 +11,17 @@ const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const starredNr = useSelector((state) => state.starred.starredMovies.length)
 
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+
   const handleSearch = (e) => {
-    setSearchParams(createSearchParams({ search: e.target.value }))
+    setSearchTerm(e.target.value)
   }
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    setSearchParams(createSearchParams({ search: debouncedSearchTerm }))
+  }, [debouncedSearchTerm])
 
   return (
     <header>
