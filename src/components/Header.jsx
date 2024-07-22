@@ -1,24 +1,30 @@
 import { Link, NavLink } from "react-router-dom"
 import { useSelector } from 'react-redux'
+import { useSearchParams, createSearchParams } from 'react-router-dom'
 
 import '../styles/header.scss'
 
-const Header = ({ searchMovies }) => {
-  
-  const { starredMovies } = useSelector((state) => state.starred)
+const Header = () => {
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const starredNr = useSelector((state) => state.starred.starredMovies.length)
+
+  const handleSearch = (e) => {
+    setSearchParams(createSearchParams({ search: e.target.value }))
+  }
 
   return (
     <header>
-      <Link to="/" data-testid="home" onClick={() => searchMovies('')}>
+      <Link to="/" data-testid="home" onClick={() => setSearchParams('')}>
         <i className="bi bi-film" />
       </Link>
 
       <nav>
         <NavLink to="/starred" data-testid="nav-starred" className="nav-starred">
-          {starredMovies.length > 0 ? (
+          {starredNr > 0 ? (
             <>
-            <i className="bi bi-star-fill bi-star-fill-white" />
-            <sup className="star-number">{starredMovies.length}</sup>
+              <i className="bi bi-star-fill bi-star-fill-white" />
+              <sup className="star-number">{starredNr}</sup>
             </>
           ) : (
             <i className="bi bi-star" />
@@ -30,16 +36,17 @@ const Header = ({ searchMovies }) => {
       </nav>
 
       <div className="input-group rounded">
-        <Link to="/" onClick={(e) => searchMovies('')} className="search-link" >
-          <input type="search" data-testid="search-movies"
-            onKeyUp={(e) => searchMovies(e.target.value)} 
-            className="form-control rounded" 
-            placeholder="Search movies..." 
-            aria-label="Search movies" 
-            aria-describedby="search-addon" 
-            />
-        </Link>            
-      </div>      
+
+        <input type="search" data-testid="search-movies"
+          onKeyUp={handleSearch}
+          defaultValue={searchParams.get('search')}
+          className="form-control rounded"
+          placeholder="Search movies..."
+          aria-label="Search movies"
+          aria-describedby="search-addon"
+        />
+
+      </div>
     </header>
   )
 }
