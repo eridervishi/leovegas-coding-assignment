@@ -9,11 +9,11 @@ const Movies = ({ viewTrailer, closeCard }) => {
     const searchTerm = searchParams.get('search') || ''
 
     const { movies, isLoading, isError, error, hasMore, isFetchingNextPage } = useInfiniteMovies(searchTerm, {
-        distance: '200px',
-        debounceMs: 200
+        distance: '400px',
+        debounceMs: 100
     });
 
-    if (isLoading && movies.length === 0) {
+    if (isLoading) {
         return <div>Loading...</div>;
     }
 

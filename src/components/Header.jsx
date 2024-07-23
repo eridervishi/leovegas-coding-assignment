@@ -20,7 +20,7 @@ const Header = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   useEffect(() => {
-    setSearchParams(createSearchParams({ search: debouncedSearchTerm }))
+    setSearchParams(debouncedSearchTerm ? createSearchParams({ search: debouncedSearchTerm }) : '')
   }, [debouncedSearchTerm, setSearchParams])
 
   return (
@@ -54,6 +54,7 @@ const Header = () => {
           placeholder="Search movies..."
           aria-label="Search movies"
           aria-describedby="search-addon"
+          va
         />
 
       </div>
