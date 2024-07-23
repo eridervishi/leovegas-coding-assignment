@@ -38,6 +38,7 @@ export const useInfiniteMovies = (searchTerm, options = {}) => {
     isError,
     error,
     hasMore: data?.page < data?.total_pages,
-    isFetchingNextPage: isFetching && page > 1
+    isFetchingNextPage: isFetching && page > 1,
+    loadMore
   };
 };

@@ -23,7 +23,7 @@ const TrailerModal = ({ isOpen, onClose, movieId }) => {
 
     return (
         <div className="custom-modal-overlay" onClick={onClose}>
-            <div className="custom-modal-content" onClick={e => e.stopPropagation()}>
+            <div data-testid="custom-modal-content" className="custom-modal-content" onClick={e => e.stopPropagation()}>
                 <div className='modal-title'>
                     <h5>{movieDetails?.title}</h5>
                     <button className="custom-modal-close" onClick={onClose}>&times;</button>

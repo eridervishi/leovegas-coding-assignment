@@ -6,70 +6,58 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import starredSlice from '../data/starredSlice'
 import watchLaterSlice from '../data/watchLaterSlice'
-import { act } from 'react-dom/test-utils';
+import { moviesApi } from '../services/movies'
 
-// Create a custom render function
-const customRender = (ui, options) => render(ui, { wrapper: ({ children }) => (
-  <Provider store={configureStore({
-    reducer: { 
-      starred: starredSlice,
-      watchLater: watchLaterSlice
-    }
-  })}>
-    <BrowserRouter>{children}</BrowserRouter>
-  </Provider>
-), ...options });
-
-// Re-export everything
-export * from '@testing-library/react';
-
-// Override render method
-export { customRender as render };
-
-export async function renderWithProviders(
+export function renderWithProviders(
   ui,
   {
     preloadedState = {},
     store = configureStore({
-      reducer: { 
+      reducer: {
+        [moviesApi.reducerPath]: moviesApi.reducer,
         starred: starredSlice,
         watchLater: watchLaterSlice
       },
-      preloadedState
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(moviesApi.middleware),
+      preloadedState,
     }),
     ...renderOptions
   } = {}
 ) {
+
+  setupListeners(store.dispatch)
+
   function Wrapper({ children }) {
-    return (
-      <Provider store={store}>
-        <BrowserRouter>{children}</BrowserRouter>
-      </Provider>
-    );
+    return <Provider store={store}><BrowserRouter>{children}</BrowserRouter></Provider>;
   }
 
-  let renderResult;
-  await act(async () => {
-    renderResult = render(ui, { wrapper: Wrapper, ...renderOptions });
-  });
+  // Create an array to store dispatched actions
+  const actions = []
 
-  return {
-    ...renderResult,
-    store,
-  };
+  // Wrap the store's dispatch method to capture actions
+  const originalDispatch = store.dispatch
+  store.dispatch = jest.fn((action) => {
+    actions.push(action)
+    return originalDispatch(action)
+  })
+
+  // Define getActions function
+  const getActions = () => actions
+
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }), getActions };
 }
 
-export function setupApiStore(api, extraReducers = {}, withoutListeners = false) {
+export function setupApiStore(moviesApi, extraReducers = {}, withoutListeners = false) {
   const getStore = () =>
     configureStore({
-      reducer: { [api.reducerPath]: api.reducer, ...extraReducers },
+      reducer: { [moviesApi.reducerPath]: moviesApi.reducer, ...extraReducers },
       middleware: (gdm) =>
-        gdm({ serializableCheck: false, immutableCheck: false }).concat(api.middleware),
+        gdm({ serializableCheck: false, immutableCheck: false }).concat(moviesApi.middleware),
     });
 
   const initialStore = getStore();
   const refObj = {
-    api,
+    moviesApi,
     store: initialStore,
   };
 
