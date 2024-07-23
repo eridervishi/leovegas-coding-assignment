@@ -21,7 +21,7 @@ const Header = () => {
 
   useEffect(() => {
     setSearchParams(createSearchParams({ search: debouncedSearchTerm }))
-  }, [debouncedSearchTerm])
+  }, [debouncedSearchTerm, setSearchParams])
 
   return (
     <header>
