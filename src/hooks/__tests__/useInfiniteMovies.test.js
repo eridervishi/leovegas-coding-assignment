@@ -21,8 +21,8 @@ describe('useInfiniteMovies', () => {
             error: null,
         });
         useInfiniteScroll.mockReturnValue({
-            isFetching: false,
-            setIsFetching: jest.fn(),
+            shouldFetch: false,
+            setShouldFetch: jest.fn(),
         });
 
         const { result } = renderHook(() => useInfiniteMovies('test'));
@@ -53,8 +53,8 @@ describe('useInfiniteMovies', () => {
             error: null,
         });
         useInfiniteScroll.mockReturnValue({
-            isFetching: true,
-            setIsFetching: mockSetIsFetching,
+            shouldFetch: true,
+            setShouldFetch: mockSetIsFetching,
         });
 
         const { result } = renderHook(() => useInfiniteMovies('test'));
@@ -78,8 +78,8 @@ describe('useInfiniteMovies', () => {
             error: null,
         });
         useInfiniteScroll.mockReturnValue({
-            isFetching: false,
-            setIsFetching: jest.fn(),
+            shouldFetch: false,
+            setShouldFetch: jest.fn(),
         });
 
         const { result, rerender } = renderHook(

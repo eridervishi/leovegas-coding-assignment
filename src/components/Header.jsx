@@ -54,7 +54,6 @@ const Header = () => {
           placeholder="Search movies..."
           aria-label="Search movies"
           aria-describedby="search-addon"
-          va
         />
 
       </div>
